@@ -3,9 +3,9 @@
     <div class="spinner"></div>
     <div class="text-center">
       <br/>
-      <p>
-        <span class="loading">Loading...</span>
-      </p>
+      <!--<p>-->
+        <!--<span class="loading">Loading...</span>-->
+      <!--</p>-->
     </div>
   </div>
 </template>
