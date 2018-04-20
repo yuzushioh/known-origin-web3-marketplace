@@ -4,7 +4,7 @@ srcset="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0xdde
   alt="KnownOrigin"></a>
 </h1>
 
-<h3 align="center">KnownOrigin Marketplace</h3>
+<h1 align="center">KnownOrigin Marketplace</h1>
 <div align="center">
   Discover, buy and collect digital copies of artwork
 </div>
@@ -26,10 +26,74 @@ srcset="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0xdde
   <a href="https://twitter.com/knownorigin_io" target="_blank">KnownOrigin</a> and <a href="http://blockrocket.tech" target="_blank">BlockRocket</a>
 </div>
 
+# About
+
+Discover, buy and collect digital artwork by some of the worlds most respected artists, illustrators and creative practitioners.
+
+We provide a platform for our artists to exhibit and sell their work as 'digital assets'.
+
+© 2018 KNOWNORIGIN
+
+BE ORIGINAL. BUY ORIGINAL
 
 # Authors
 
 Originally created by [KnownOrigin](https://twitter.com/knownorigin_io) and [BlockRocket](http://blockrocket.tech)
+
+
+# Features
+
+* **Multiple Artists & Assets** - Artists & Assets from around the world 
+* **Full ERC-721 Compatibility** - Smart Contract is fully ERC-721 compliant
+* **Full ERC-721 Metadata Compatibility** - Each ERC-721 token uses latest standards for ERC-721 metadata
+* **Full ERC-165 Compatibility** - Smart Contract is fully ERC-165 compliant
+* **IPFS Support** - Internally IPFS is used for storing asset files and metadata
+
+
+## Installation
+1. Install [Node](https://nodejs.org/en/) v8.x or above
+
+2. Install [Ganache](http://truffleframework.com/ganache/).
+
+3. Install [Truffle](http://truffleframework.com).
+	```
+	npm install -g truffle
+	```
+4. Install [Metamask](https://metamask.io/) in chrome so you can test purchasing assets
+
+5. Install node modules for project
+  ```
+  npm install
+  ```
+6. When running locally you will need to link your *Metamask* account and your locally running Ganache.
+  * In Metamask - ensure you are logged out.
+  * In Metamask - `Restore from seed phrase` and place the 12 word seed from the Ganache in to Metamask
+     * This will link the accounts inside Ganache with Metamask & give you 100 ETH to test with
+  * In Metamask - add a custom network of `http://127.0.0.1:7545` - this is Ganache
+     * This will point Metamask at your locally running Ganache blockchain
+
+7. Compile and migrate the contracts to your local blockchain (default is *ganache*).
+	```
+	./clean_deploy_local.sh
+	```
+	* This will compile the contracts and place the ABI files into `/build/` as well as deploying to Ganache
+
+8. Run the webpack server for front-end hot reloading. Smart contract changes do not support hot reloading for now.
+	```
+	npm run start
+	```
+  **It should now work!**
+
+## Build for production
+To build the application for production, use the build command. A production build will be compiled in the `dist` folder.
+```javascript
+npm run build
+```
+
+#### History
+
+* Original project based on https://github.com/wespr/truffle-vue
+* Base contracts based on https://github.com/OpenZeppelin/zeppelin-solidity
 
 # License
 
