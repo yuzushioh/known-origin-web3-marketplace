@@ -37,7 +37,7 @@
         <td>{{ totalPurchaseValueInEther }} ETH</td>
       </tr>
       <tr v-if="totalEditions()">
-        <td>Total number of editions</td>
+        <td>Number of editions</td>
         <td>{{totalEditions()}}</td>
       </tr>
       <tr v-if="totalListedArtists()">
@@ -45,7 +45,7 @@
         <td>{{totalListedArtists()}}</td>
       </tr>
       <tr v-if="mostExpensivePiece()">
-        <td>Current Most Expensive Piece</td>
+        <td>Most expensive piece</td>
         <td>{{mostExpensivePiece().priceInEther}} ETH</td>
       </tr>
       </tbody>
