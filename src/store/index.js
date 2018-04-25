@@ -118,6 +118,15 @@ const store = new Vuex.Store({
     getTransactionForAsset: (state, getters) => (assetId) => {
       return getters.assetPurchaseState(assetId).transaction;
     },
+    totalEditions: (state, getters) => () => {
+      return _.size(_.uniqBy(state.assets, 'edition'));
+    },
+    totalListedArtists: (state, getters) => () => {
+      return _.size(_.uniqBy(state.assets, 'artistCode'));
+    },
+    mostExpensivePiece: (state, getters) => () => {
+      return _.head(_.orderBy(state.assets, 'priceInWei'));
+    },
   },
   mutations: {
     [mutations.SET_COMMISSION_ADDRESSES](state, {curatorAddress, contractDeveloperAddress, contractAddress}) {
