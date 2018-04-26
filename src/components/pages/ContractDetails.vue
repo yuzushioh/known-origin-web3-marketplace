@@ -51,13 +51,13 @@
       </tbody>
     </table>
 
-    <h1>Activity Stream</h1>
+    <!--<h1>Activity Stream</h1>-->
 
-    <table class="table table-striped">
-      <tbody>
+    <!--<table class="table table-striped">-->
+      <!--<tbody>-->
 
-      </tbody>
-    </table>
+      <!--</tbody>-->
+    <!--</table>-->
   </div>
 </template>
 
