@@ -97,7 +97,15 @@ const artists = [
     name: 'Stina Jones',
     bio: 'I’m a freelance Illustrator & Graphic Designer based in Manchester, with 15 years industry experience ',
     strapline: 'I’m a freelance Illustrator & Graphic Designer based in Manchester, with 15 years industry experience ',
-    img: 'static/artists/StinaJones1_Profile@x2_preview.png',
+    img: 'static/artists/StinaJones1_Profile@x2.png',
+    live: true
+  },
+  {
+    artistCode: 'PSP',
+    name: 'Paris Psalter',
+    bio: 'Will Halcomb is a digital designer and artist from Birmingham, Alabama. A recent graduate of the University of Mississippi with a degree in Graphic Design (BFA), he now lives in NYC.',
+    strapline: 'Will Halcomb is a digital designer and artist from Birmingham, Alabama. A recent graduate of the University of Mississippi with a degree in Graphic Design (BFA), he now lives in NYC.',
+    img: 'static/artists/ParisPSalter_Profile@x2.png',
     live: true
   },
   {
