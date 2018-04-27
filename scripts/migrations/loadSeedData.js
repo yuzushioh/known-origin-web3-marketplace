@@ -1,0 +1,80 @@
+const _ = require('lodash');
+const Eth = require('ethjs');
+const ipfsUploader = require('../ipfs-uploader');
+const Promise = require('bluebird');
+
+const flattenArtistData = (galleryData) => {
+  let flatInserts = [];
+
+  _.forEach(galleryData.artists, (artist) => {
+
+    const artistName = artist.name;
+
+    _.forEach(artist.artworks, (artwork) => {
+
+      let ipfsPath = artwork.ipfsPath;
+
+      let numberOfEditions = artwork.numberOfEditions;
+      let edition = artwork.edition;
+      if (edition.length !== 16) {
+        throw new Error(`Edition ${edition} not 16 chars long`);
+      }
+
+      let costInWei = Eth.toWei(artwork.costInEth, 'ether');
+
+      flatInserts.push({
+        numberOfEditions,
+        costInWei,
+        ipfsPath,
+        edition,
+        artistName
+      });
+
+    });
+  });
+
+  return flatInserts;
+};
+
+
+module.exports = (instance, _curatorAccount, _openingTime, galleryData) => {
+
+  const flatInserts = flattenArtistData(galleryData);
+
+  // convert gallery.json into individual inserts decorated with IPFS data
+  const populatedMintItems = _.flatMap(flatInserts, (insert) => {
+    console.log(`Seeding test data for [${insert.ipfsPath}]`);
+    return ipfsUploader.uploadMetaData(insert)
+      .then((tokenUri) => {
+
+        return _.map(_.range(0, insert.numberOfEditions), function (count) {
+          console.log(`Populating Sourcing [${insert.edition}] - item [${count}]`);
+
+          return {
+            tokenUri,
+            edition: insert.edition,
+            costInWei: insert.costInWei.toString(10),
+            openingTime: _openingTime
+          };
+        });
+      });
+  });
+
+  // Each each set of inserts per edition, Promise.each is serial to prevent duplicate transaction issues
+  return Promise.each(populatedMintItems, function (insertsForEditionArray) {
+    console.log(`Minting [${insertsForEditionArray[0].edition}] - total to mint [${insertsForEditionArray.length}]`);
+
+    // insert each series before moving on the to the next one
+    return Promise.map(insertsForEditionArray, function ({tokenUri, edition, costInWei, openingTime}) {
+      return instance.mint(
+        tokenUri,
+        edition,
+        costInWei,
+        openingTime,
+        _curatorAccount
+      );
+    });
+  });
+
+};
+

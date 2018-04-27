@@ -93,6 +93,14 @@ const artists = [
     live: true
   },
   {
+    artistCode: 'STJ',
+    name: 'Stina Jones',
+    bio: 'I’m a freelance Illustrator & Graphic Designer based in Manchester, with 15 years industry experience ',
+    strapline: 'I’m a freelance Illustrator & Graphic Designer based in Manchester, with 15 years industry experience ',
+    img: 'static/artists/StinaJones1_Profile@x2_preview.png',
+    live: true
+  },
+  {
     artistCode: 'HSM',
     name: 'Hamish Muir',
     twitter: '@CoinJournal',
