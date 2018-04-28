@@ -1,9 +1,8 @@
-const Promise = require('bluebird');
-
 const KnownOriginDigitalAsset = artifacts.require('KnownOriginDigitalAsset');
 
 const loadSeedData = require('../scripts/migrations/loadSeedData');
 const loadContractCredentials = require('../scripts/migrations/loadContractCredentials');
+const blocktimestampPlusOne = require('../scripts/migrations/blocktimestampPlusOne');
 
 const galleryData = {
   "artists": [
@@ -45,30 +44,22 @@ const galleryData = {
   ]
 };
 
-let promisifyGetBlockNumber = Promise.promisify(web3.eth.getBlockNumber);
-let promisifyGetBlock = Promise.promisify(web3.eth.getBlock);
+const artistAccount = "0x8d01Bdf55Fa7f1CCfef7b670a11B8c14faf827Bf";
 
 module.exports = async function (deployer, network, accounts) {
 
-  const {_developerAccount} = loadContractCredentials(network, accounts);
-
-  const _curatorAccount = "0x32f04bedd52f32576a0d7fa8e3ca79d6ccdfe568";
+  const {_curatorAccount, _developerAccount, _artistAccount} = loadContractCredentials(network, accounts, artistAccount);
 
   console.log(`Running within network = ${network}`);
-  console.log(`_curatorAccount = ${_curatorAccount}`);
-  console.log(`_developerAccount = ${_developerAccount}`);
 
   let instance = await KnownOriginDigitalAsset.deployed();
-  let blockNumber = await  promisifyGetBlockNumber();
-  let block = await  promisifyGetBlock(blockNumber);
+  const _openingTime = await blocktimestampPlusOne(web3);
 
   console.log(`Deployed contract to address = [${instance.address}] to network [${network}]`);
 
   if (network === 'ganache' || network === 'live' || network === 'ropsten' || network === 'rinkeby') {
-    console.log(`Loading in seed data`);
-    const _openingTime = block.timestamp + 1; // one second in the future
-
-    return loadSeedData(instance, _curatorAccount, _openingTime, galleryData);
+    console.log(`Loading in seed data...`);
+    return loadSeedData(instance, _artistAccount, _openingTime, galleryData, _developerAccount);
   } else {
     console.log(`SKIPPING loading seed data as running on ${network}`);
   }

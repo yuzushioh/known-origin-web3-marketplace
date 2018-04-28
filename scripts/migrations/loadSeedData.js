@@ -37,7 +37,7 @@ const flattenArtistData = (galleryData) => {
 };
 
 
-module.exports = (instance, _curatorAccount, _openingTime, galleryData) => {
+module.exports = (instance, _artistAccount, _openingTime, galleryData, _developerAccount) => {
 
   const flatInserts = flattenArtistData(galleryData);
 
@@ -48,7 +48,7 @@ module.exports = (instance, _curatorAccount, _openingTime, galleryData) => {
       .then((tokenUri) => {
 
         return _.map(_.range(0, insert.numberOfEditions), function (count) {
-          console.log(`Populating Sourcing [${insert.edition}] - item [${count}]`);
+          console.log(`Sourcing [${insert.edition}] - item [${count}]`);
 
           return {
             tokenUri,
@@ -62,16 +62,18 @@ module.exports = (instance, _curatorAccount, _openingTime, galleryData) => {
 
   // Each each set of inserts per edition, Promise.each is serial to prevent duplicate transaction issues
   return Promise.each(populatedMintItems, function (insertsForEditionArray) {
-    console.log(`Minting [${insertsForEditionArray[0].edition}] - total to mint [${insertsForEditionArray.length}]`);
-
     // insert each series before moving on the to the next one
     return Promise.map(insertsForEditionArray, function ({tokenUri, edition, costInWei, openingTime}) {
+
+      console.log(`Minting: E: ${edition} T: ${tokenUri} C: ${costInWei} O: ${openingTime}`);
+
       return instance.mint(
         tokenUri,
         edition,
         costInWei,
         openingTime,
-        _curatorAccount
+        _artistAccount,
+        {from: _developerAccount}
       );
     });
   });
