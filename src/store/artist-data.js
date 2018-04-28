@@ -109,6 +109,14 @@ const artists = [
     live: true
   },
   {
+    artistCode: 'AKP',
+    name: 'Aktiv Protesk',
+    bio: 'Independent digital artists',
+    strapline: 'Independent digital artists',
+    img: 'static/artists/AktivProtesk_@x2_preview.jpeg',
+    live: true
+  },
+  {
     artistCode: 'HSM',
     name: 'Hamish Muir',
     twitter: '@CoinJournal',
