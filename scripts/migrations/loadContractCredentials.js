@@ -11,7 +11,7 @@ module.exports = (network, accounts, artistAccount) => {
 
   let _artistAccount = _curatorAccount;
 
-  // if supplied use as easier for us!
+  // if supplied use as easier for us - and they get ETH direct!
   if (artistAccount) {
     _artistAccount = artistAccount;
   }

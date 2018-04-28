@@ -4,42 +4,18 @@ const loadSeedData = require('../scripts/migrations/loadSeedData');
 const loadContractCredentials = require('../scripts/migrations/loadContractCredentials');
 const blocktimestampPlusOne = require('../scripts/migrations/blocktimestampPlusOne');
 
+const ARTWORK = {
+  "ipfsPath": "paris_salter_red",
+  "edition": "PSPRED0000000DIG",
+  "numberOfEditions": 1,
+  "costInEth": 0.2
+};
+
 const galleryData = {
   "artists": [
     {
       "name": "Paris Psalter",
-      "artworks": [
-        {
-          "ipfsPath": "paris_salter_red",
-          "edition": "PSPRED0000000DIG",
-          "numberOfEditions": 1,
-          "costInEth": 0.2
-        },
-        {
-          "ipfsPath": "paris_salter_red",
-          "edition": "PSPRED0000000DIG",
-          "numberOfEditions": 1,
-          "costInEth": 0.2
-        },
-        {
-          "ipfsPath": "paris_salter_red",
-          "edition": "PSPRED0000000DIG",
-          "numberOfEditions": 1,
-          "costInEth": 0.2
-        },
-        {
-          "ipfsPath": "paris_salter_red",
-          "edition": "PSPRED0000000DIG",
-          "numberOfEditions": 1,
-          "costInEth": 0.2
-        },
-        {
-          "ipfsPath": "paris_salter_red",
-          "edition": "PSPRED0000000DIG",
-          "numberOfEditions": 1,
-          "costInEth": 0.2
-        }
-      ]
+      "artworks": [ARTWORK, ARTWORK, ARTWORK, ARTWORK, ARTWORK]
     }
   ]
 };

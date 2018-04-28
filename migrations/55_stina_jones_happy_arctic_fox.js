@@ -4,46 +4,21 @@ const loadSeedData = require('../scripts/migrations/loadSeedData');
 const loadContractCredentials = require('../scripts/migrations/loadContractCredentials');
 const blocktimestampPlusOne = require('../scripts/migrations/blocktimestampPlusOne');
 
+const ARTWORK = {
+  'ipfsPath': 'stina_jones_happy_fox',
+  'edition': 'STJHAPPYFOX00DIG',
+  'numberOfEditions': 1,
+  'costInEth': 0.1
+};
+
 const galleryData = {
   'artists': [
     {
       'name': 'Stina Jones',
-      'artworks': [
-        {
-          'ipfsPath': 'stina_jones_happy_fox',
-          'edition': 'STJHAPPYFOX00DIG',
-          'numberOfEditions': 1,
-          'costInEth': 0.1
-        },
-        {
-          'ipfsPath': 'stina_jones_happy_fox',
-          'edition': 'STJHAPPYFOX00DIG',
-          'numberOfEditions': 1,
-          'costInEth': 0.1
-        },
-        {
-          'ipfsPath': 'stina_jones_happy_fox',
-          'edition': 'STJHAPPYFOX00DIG',
-          'numberOfEditions': 1,
-          'costInEth': 0.1
-        },
-        {
-          'ipfsPath': 'stina_jones_happy_fox',
-          'edition': 'STJHAPPYFOX00DIG',
-          'numberOfEditions': 1,
-          'costInEth': 0.1
-        },
-        {
-          'ipfsPath': 'stina_jones_happy_fox',
-          'edition': 'STJHAPPYFOX00DIG',
-          'numberOfEditions': 1,
-          'costInEth': 0.1
-        }
-      ]
+      'artworks': [ARTWORK, ARTWORK, ARTWORK, ARTWORK, ARTWORK]
     }
   ]
 };
-
 
 const artistAccount = undefined;
 
