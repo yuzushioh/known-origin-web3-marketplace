@@ -45,10 +45,10 @@
     </div>
 
     <div class="row" id="how-to">
-      <div class="col text-white mt-5 mb-5">
+      <div class="col text-white mt-4 mb-4">
         <h4>Getting started</h4>
       </div>
-      <div class="col text-white mt-5 mb-5">
+      <div class="col text-white mt-4 mb-4">
         <h4>A quick guide to buying art with Ethereum.</h4>
         <p>We have created a short guide for those new to cryptocurrencies and Ethereum wallets.</p>
         <p>This will give you the basics you need to purchase Artwork via KnownOrigin.io</p>
@@ -56,14 +56,22 @@
       </div>
     </div>
 
-    <!--<hr/>-->
+    <div class="row" id="quote">
+      <div class="col mt-4">
+        <blockquote class="blockquote text-right">
+          <p class="mb-0">
+            <font-awesome-icon :icon="['fas', 'quote-left']"></font-awesome-icon>
+            <span class="pl-2 pr-2">Can we use the power of the Blockchain to mint Digital Assets for artwork that evolves proof of ownership, provenance, and authenticity?</span>
+            <font-awesome-icon :icon="['fas', 'quote-right']"></font-awesome-icon>
+          </p>
+          <footer class="blockquote-footer mt-4">
+            David, James, &amp; Andy - December 2017 <br/>
+            <a href="https://medium.com/knownorigin/pop-up-galleries-artists-and-blockchain-5574115ab507">Read full article <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon></a>
+          </footer>
+        </blockquote>
 
-    <!--<div class="row">-->
-      <!--<div class="col mt-4">-->
-        <!--<p class="lead quote m-4">Can we use the power of Ethereum blockchain and the integrity of digital assets in the art world to improve the proof of ownership, provenance, authenticity and reducing forgery of artwork?</p>-->
-        <!--<router-link :to="{ name: 'gallery' }">Read full article</router-link>-->
-      <!--</div>-->
-    <!--</div>-->
+      </div>
+    </div>
 
   </div>
 
@@ -113,6 +121,14 @@
     color: $primary;
   }
 
+  blockquote {
+    font-size: 28px;
+
+    a {
+        font-size: 1rem;
+    }
+  }
+
   .lead-section {
       margin-left: 250px;
       margin-bottom: 50px;
@@ -143,6 +159,10 @@
   #join, #featured {
     padding-top: 50px;
     padding-bottom: 50px;
+  }
+
+  #quote {
+    margin: 100px;
   }
 
   /* mobile only */
