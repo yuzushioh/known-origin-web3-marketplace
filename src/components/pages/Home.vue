@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <div class="col p-4">
+      <div class="col lead-section">
         <h1>Rare<br/>digital<br/>assets.</h1>
         <p class="lead">Discover, buy and collect digital artwork by some of the worlds most respected artists, illustrators and creative practitioners.</p>
         <router-link :to="{ name: 'gallery' }" class="btn btn-outline-primary btn-lg">Open gallery</router-link>
@@ -16,15 +16,52 @@
 
     <div class="row">
       <div class="col mt-4">
-        <h5 class="text-center">Featured artists</h5>
-        <h2 class="text-center">89-A</h2>
+        <h5 class="text-center pb-4">Featured artists</h5>
+        <div class="card-columns">
+          <galleryEdition
+            v-for="assetEdition, key in lookupAssetsByArtistCode('AKP')"
+            :edition="assetEdition[0]"
+            :key="key">
+          </galleryEdition>
+
+          <galleryEdition
+            v-for="assetEdition, key in lookupAssetsByArtistCode('89A')"
+            :edition="assetEdition[0]"
+            :key="key">
+          </galleryEdition>
+        </div>
+
       </div>
     </div>
 
-    <!--<div class="row bg-primary text-white">-->
-      <!--<div class="col">Getting started</div>-->
-      <!--<div class="col">A quick guide to buying art with Ethereum.</div>-->
+    <hr/>
+
+    <div class="row">
+      <div class="col mt-4 mb-4 text-center">
+        <h2><strong>Join the collective</strong></h2>
+        <p>Head over to our artist micro-site to learn how to get involved...</p>
+        <router-link :to="{ name: 'gallery' }" class="btn btn-outline-primary btn-lg">I want to be a KnownOrigin Artist</router-link>
+      </div>
+    </div>
+
+    <!--<div class="row">-->
+      <!--<div class="col bg-primary text-white">-->
+        <!--<h4>Getting started: A quick guide to buying art with Ethereum.</h4>-->
+        <!--<p>We have created a short guide for those new to cryptocurrencies and Ethereum wallets.</p>-->
+        <!--<p>This will give you the basics you need to purchase Artwork via KnownOrigin.io</p>-->
+        <!--<router-link :to="{ name: 'gallery' }" class="btn btn-outline-primary btn-lg">I want to be a KnownOrigin Artist</router-link>-->
+      <!--</div>-->
     <!--</div>-->
+
+    <!--<hr/>-->
+
+    <!--<div class="row">-->
+      <!--<div class="col mt-4">-->
+        <!--<p class="lead quote m-4">Can we use the power of Ethereum blockchain and the integrity of digital assets in the art world to improve the proof of ownership, provenance, authenticity and reducing forgery of artwork?</p>-->
+        <!--<router-link :to="{ name: 'gallery' }">Read full article</router-link>-->
+      <!--</div>-->
+    <!--</div>-->
+
   </div>
 
 </template>
@@ -32,17 +69,20 @@
 <script>
 
   import { mapGetters, mapState } from 'vuex';
-  import Artist from '../Artist';
-  import Gallery from './Gallery';
+  import ArtistShortBio from '../ui-controls/ArtistShortBio';
+  import Asset from '../Asset';
+  import GalleryEdition from '../GalleryEdition';
 
   export default {
     name: 'home',
-    components: {},
+    components: {ArtistShortBio, GalleryEdition},
     computed: {
-      ...mapState([])
+      ...mapGetters(['lookupAssetsByArtistCode'])
     },
-    mounted() {
-
+    methods: {
+      lookupArtist: function () {
+        return this.$store.getters.findArtist(this.$route.params.artistCode);
+      }
     }
   };
 </script>
@@ -66,9 +106,21 @@
 
   h5 {
     text-transform: uppercase;
+    color: $primary;
   }
 
-  #brand_logo {
+  .lead-section {
+      margin-left: 250px;
+      margin-bottom: 50px;
+      margin-top: 25px;
+  }
+
+  .bg-primary {
+    margin-top: 50px;
+  }
+
+  .quote {
+    font-style: italic;
   }
 
   /* mobile only */
@@ -79,6 +131,10 @@
 
     .lead {
       font-size: 1rem;
+    }
+
+    .lead-section {
+      margin-left: 50px;
     }
   }
 </style>
