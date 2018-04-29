@@ -31,6 +31,9 @@
           </galleryEdition>
         </div>
 
+        <div class="m-4 text-center">
+          <router-link :to="{ name: 'gallery' }" class="btn btn-outline-primary btn-lg">Open gallery</router-link>
+        </div>
       </div>
     </div>
 
@@ -56,7 +59,7 @@
       </div>
     </div>
 
-    <div class="row" id="quote">
+    <div class="row d-none d-sm-block" id="quote">
       <div class="col mt-4">
         <blockquote class="blockquote text-right">
           <p class="mb-0">
@@ -132,7 +135,8 @@
   .lead-section {
       margin-left: 250px;
       margin-bottom: 50px;
-      margin-top: 25px;
+      margin-top: 65px;
+      margin-right: 250px;
   }
 
   .bg-primary {
@@ -156,9 +160,14 @@
     padding-left: 250px;
   }
 
-  #join, #featured {
+  #join {
     padding-top: 50px;
     padding-bottom: 50px;
+  }
+
+  #featured {
+    padding-top: 50px;
+    padding-bottom: 10px;
   }
 
   #quote {
@@ -181,6 +190,7 @@
 
     .lead-section {
       margin-left: 50px;
+      margin-right: 50px;
     }
 
     #how-to {
