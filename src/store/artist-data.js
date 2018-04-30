@@ -117,6 +117,30 @@ const artists = [
     live: true
   },
   {
+    artistCode: 'LHD',
+    name: 'Lee Holland',
+    bio: 'Hi, I’m Lee Holland, a multi-disciplined designer and illustrator based in Sheffield, United Kingdom.',
+    strapline: 'Hi, I’m Lee Holland, a multi-disciplined designer and illustrator based in Sheffield, United Kingdom.',
+    img: 'static/artists/LeeHolland_Profile@x2.png',
+    live: true
+  },
+  {
+    artistCode: 'MKL',
+    name: 'Mike Lewis',
+    bio: 'Mike Lewis, (AKA The Mighty Lark,) began painting, drawing and illustrating professionally in the summer of 2003.',
+    strapline: 'Mike Lewis, (AKA The Mighty Lark,) began painting, drawing and illustrating professionally in the summer of 2003.',
+    img: 'static/artists/MikeLewis_Profile@x2.png',
+    live: true
+  },
+  {
+    artistCode: 'TSM',
+    name: 'Tony Smith',
+    bio: '',
+    strapline: '',
+    img: 'static/artists/TonySmith_Profile@x2.png',
+    live: true
+  },
+  {
     artistCode: 'HSM',
     name: 'Hamish Muir',
     twitter: '@CoinJournal',
