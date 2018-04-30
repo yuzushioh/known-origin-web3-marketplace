@@ -10,7 +10,6 @@
 
     <div class="row bg-primary" id="brand_logo">
       <div class="col text-center">
-        <img src="../../../static/KO_dots.jpg" class="img-fluid"/>
       </div>
     </div>
 
@@ -48,7 +47,7 @@
     </div>
 
     <div class="row" id="how-to">
-      <div class="col text-white mt-4 mb-4">
+      <div class="col text-white mt-4 mb-4 d-none d-md-block">
         <h4>Getting started</h4>
       </div>
       <div class="col text-white mt-4 mb-4">
@@ -59,7 +58,7 @@
       </div>
     </div>
 
-    <div class="row d-none d-sm-block" id="quote">
+    <div class="row d-none d-md-block" id="quote">
       <div class="col mt-4">
         <blockquote class="blockquote text-right">
           <p class="mb-0">
@@ -81,7 +80,6 @@
 </template>
 
 <script>
-
   import { mapGetters, mapState } from 'vuex';
   import ArtistShortBio from '../ui-controls/ArtistShortBio';
   import Asset from '../Asset';
@@ -148,9 +146,11 @@
   }
 
   #brand_logo {
-    img {
-      max-height: 400px;
-    }
+    min-height: 400px;
+    background-image: url('../../../static/KO_dots.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
   }
 
   #how-to {
@@ -197,6 +197,11 @@
       padding-top: 50px;
       padding-bottom: 50px;
       padding-left: 50px;
+    }
+
+    #brand_logo {
+      min-height: 200px;
+      background-image: url('../../../static/KO_dots.jpg');
     }
   }
 </style>
