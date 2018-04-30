@@ -9,8 +9,7 @@
     </div>
 
     <div class="row bg-primary" id="brand_logo">
-      <div class="col text-center">
-      </div>
+      <div class="col text-center"></div>
     </div>
 
     <div class="row" id="featured">
@@ -42,7 +41,9 @@
       <div class="col mt-4 mb-4 text-center">
         <h2><strong>Join the collective</strong></h2>
         <p>Head over to our artist micro-site to learn how to get involved...</p>
-        <a href="https://knownorigin.io" target="_blank" class="btn btn-outline-primary btn-lg">Artist form <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon></a>
+        <a href="https://knownorigin.io" target="_blank" class="btn btn-outline-primary btn-lg">Artist form
+          <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon>
+        </a>
       </div>
     </div>
 
@@ -54,7 +55,9 @@
         <h4>A quick guide to buying art with Ethereum.</h4>
         <p>We have created a short guide for those new to cryptocurrencies and Ethereum wallets.</p>
         <p>This will give you the basics you need to purchase Artwork via KnownOrigin.io</p>
-        <a href="https://medium.com/knownorigin/getting-started-with-knownorigin-io-a-quick-guide-to-buying-art-with-ethereum-d4dac40a4fea" target="_blank" class="btn btn-outline-light btn-lg">View guide <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon></a>
+        <a href="https://medium.com/knownorigin/getting-started-with-knownorigin-io-a-quick-guide-to-buying-art-with-ethereum-d4dac40a4fea" target="_blank" class="btn btn-outline-light btn-lg">View guide
+          <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon>
+        </a>
       </div>
     </div>
 
@@ -68,10 +71,31 @@
           </p>
           <footer class="blockquote-footer mt-4">
             David, James, &amp; Andy - December 2017 <br/>
-            <a href="https://medium.com/knownorigin/pop-up-galleries-artists-and-blockchain-5574115ab507">Read full article <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon></a>
+            <a href="https://medium.com/knownorigin/pop-up-galleries-artists-and-blockchain-5574115ab507">Read full article
+              <font-awesome-icon :icon="['fas', 'external-link-alt']" class="pl-2"></font-awesome-icon>
+            </a>
           </footer>
         </blockquote>
+      </div>
+    </div>
 
+    <hr/>
+
+    <div class="row" id="partners">
+      <div class="col mt-4 text-center">
+        <h5 class="text-center pb-4">Partners</h5>
+
+        <div class="row">
+          <div class="col">
+            <img src="../../../static/partners/SHM_icn.png" class="img-fluid"/>
+          </div>
+          <div class="col">
+            <a href="http://www.blockrocket.tech" target="_blank"><img src="../../../static/partners/BlockRock_icn.png" class="img-fluid"/></a>
+          </div>
+          <div class="col">
+            <a href="https://trustwalletapp.com/"><img src="../../../static/partners/TrustWallet_icn.png" class="img-fluid"/></a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -126,15 +150,15 @@
     font-size: 28px;
 
     a {
-        font-size: 1rem;
+      font-size: 1rem;
     }
   }
 
   .lead-section {
-      margin-left: 250px;
-      margin-bottom: 50px;
-      margin-top: 65px;
-      margin-right: 250px;
+    margin-left: 250px;
+    margin-bottom: 50px;
+    margin-top: 65px;
+    margin-right: 250px;
   }
 
   .bg-primary {
