@@ -217,12 +217,29 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    [actions.UPDATE_PURCHASE_STATE_FOR_ACCOUNT]({commit, dispatch, state}) {
+      // Get the tokens which are currently in the process of being purchased
+      let assetsBeingPurchased = _.keys(state.purchaseState);
+
+      // Check is the purchased assets for the account are currently in the purchase flow
+      let found = _.find(assetsBeingPurchased, (tokenBeingPurchased) => _.some(tokens, (token) => tokenBeingPurchased));
+
+      if (found) {
+        // If the asset is not purchased successful then update the state to show its success
+        if (state.purchaseState[found].state !== 'PURCHASE_SUCCESSFUL') {
+          commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: found, buyer: state.accounts});
+        }
+      }
+    },
     [actions.GET_ASSETS_PURCHASED_FOR_ACCOUNT]({commit, dispatch, state}) {
       KnownOriginDigitalAsset.deployed()
         .then((contract) => {
           return contract.tokensOf(state.account)
             .then((tokens) => {
               commit(mutations.SET_ASSETS_PURCHASED_FROM_ACCOUNT, tokens);
+
+              // Note: this must happen after committing the accounts balance
+              dispatch(actions.UPDATE_PURCHASE_STATE_FOR_ACCOUNT);
             });
         })
         .catch((e) => {
@@ -518,6 +535,11 @@ const store = new Vuex.Store({
             toBlock: 'latest' // wait until event comes through
           });
 
+          // Trigger a timer to check the accounts purchases - can provide update faster waiting for the event
+          const timer = setTimeout(function () {
+            dispatch(actions.GET_ASSETS_PURCHASED_FOR_ACCOUNT);
+          }, 1000);
+
           purchaseEvent.watch(function (error, result) {
             if (!error) {
               // 3) Purchase succeeded
@@ -525,11 +547,12 @@ const store = new Vuex.Store({
               dispatch(actions.GET_ASSETS_PURCHASED_FOR_ACCOUNT);
               commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: _tokenId, buyer: _buyer});
             } else {
+              console.log('Failure', error);
               // Purchase failure
               commit(mutations.PURCHASE_FAILED, {tokenId: _tokenId, buyer: _buyer});
               purchaseEvent.stopWatching();
-              console.log('Failure', error);
             }
+            clearInterval(timer);
           });
 
           // 1) Initial purchase flow
@@ -550,11 +573,18 @@ const store = new Vuex.Store({
               // Purchase failure
               console.log('Purchase rejection/error', error);
               commit(mutations.PURCHASE_FAILED, {tokenId: _tokenId, buyer: _buyer});
+            })
+            .finally(() => {
+              clearInterval(timer);
             });
         })
         .catch((e) => {
           console.log('Failure', e);
           commit(mutations.PURCHASE_FAILED, {tokenId: assetToPurchase.id, buyer: state.account});
+          clearInterval(timer);
+        })
+        .finally(() => {
+          clearInterval(timer);
         });
     },
     [actions.PURCHASE_ASSET_WITH_FIAT]({commit, dispatch, state} = controls, assetToPurchase) {
