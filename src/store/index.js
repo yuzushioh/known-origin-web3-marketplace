@@ -222,11 +222,19 @@ const store = new Vuex.Store({
       let assetsBeingPurchased = _.keys(state.purchaseState);
 
       // Check is the purchased assets for the account are currently in the purchase flow
-      let found = _.find(assetsBeingPurchased, (tokenBeingPurchased) => _.some(tokens, (token) => tokenBeingPurchased));
+      const matcher = function (purchaseAsset) {
+        return _.some(assetsBeingPurchased, function (asset) {
+          return asset === purchaseAsset;
+        });
+      };
+
+      let found = _.find(state.assetsPurchasedByAccount, matcher);
 
       if (found) {
+        console.log("FOUND", found);
         // If the asset is not purchased successful then update the state to show its success
-        if (state.purchaseState[found].state !== 'PURCHASE_SUCCESSFUL') {
+        if (state.purchaseState[found] && state.purchaseState[found].state !== 'PURCHASE_SUCCESSFUL') {
+          console.log("matched: setting success for asset", found);
           commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: found, buyer: state.accounts});
         }
       }
@@ -552,7 +560,7 @@ const store = new Vuex.Store({
               commit(mutations.PURCHASE_FAILED, {tokenId: _tokenId, buyer: _buyer});
               purchaseEvent.stopWatching();
             }
-            clearInterval(timer);
+            if (timer) clearInterval(timer);
           });
 
           // 1) Initial purchase flow
@@ -573,18 +581,12 @@ const store = new Vuex.Store({
               // Purchase failure
               console.log('Purchase rejection/error', error);
               commit(mutations.PURCHASE_FAILED, {tokenId: _tokenId, buyer: _buyer});
-            })
-            .finally(() => {
-              clearInterval(timer);
+              if (timer) clearInterval(timer);
             });
         })
         .catch((e) => {
           console.log('Failure', e);
           commit(mutations.PURCHASE_FAILED, {tokenId: assetToPurchase.id, buyer: state.account});
-          clearInterval(timer);
-        })
-        .finally(() => {
-          clearInterval(timer);
         });
     },
     [actions.PURCHASE_ASSET_WITH_FIAT]({commit, dispatch, state} = controls, assetToPurchase) {

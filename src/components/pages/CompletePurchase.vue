@@ -77,7 +77,8 @@
           </ul>
 
           <div class="card-footer" v-if="!isPurchaseFailed(asset.id)">
-            <complete-purchase-button :asset="asset" class="pad-bottom" @purchaseInitiated="onPurchaseInitiated"></complete-purchase-button>
+            <complete-purchase-button :asset="asset" class="pad-bottom"
+                                      @purchaseInitiated="onPurchaseInitiated"></complete-purchase-button>
           </div>
 
           <div v-if="isPurchaseFailed(asset.id)" class="card-footer">
@@ -95,7 +96,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
+  import {mapGetters, mapState} from 'vuex';
   import Artist from '../Artist';
   import Asset from '../Asset';
   import CompletePurchaseButton from '../ui-controls/CompletePurchaseButton';
@@ -127,7 +128,7 @@
       TokenId,
       LoadingSpinner
     },
-    data () {
+    data() {
       return {
         confirm_terms: false
       };
@@ -166,9 +167,12 @@
       }
     },
     mounted() {
-      if (!this.account) {
-        this.$modal.show('no-web3-found');
-      }
+      // Dont' perform the no-web3 check immediately, allow the chain time to respond
+      setTimeout(function () {
+        if (!this.account) {
+          this.$modal.show('no-web3-found');
+        }
+      }.bind(this), 5000);
     }
   };
 </script>
