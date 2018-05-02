@@ -220,15 +220,18 @@ const store = new Vuex.Store({
     [actions.UPDATE_PURCHASE_STATE_FOR_ACCOUNT]({commit, dispatch, state}) {
       // Get the tokens which are currently in the process of being purchased
       let assetsBeingPurchased = _.keys(state.purchaseState);
+      console.log("assetsBeingPurchased", assetsBeingPurchased);
 
       // Check is the purchased assets for the account are currently in the purchase flow
       const matcher = function (purchaseAsset) {
         return _.some(assetsBeingPurchased, function (asset) {
-          return asset === purchaseAsset;
+          console.log("matcher() purchaseAsset", purchaseAsset.toString(10), asset.toString());
+          return purchaseAsset.toString(10) === asset.toString();
         });
       };
 
       let found = _.find(state.assetsPurchasedByAccount, matcher);
+      console.log("FOUND", found);
 
       if (found) {
         console.log("FOUND", found);
@@ -544,7 +547,8 @@ const store = new Vuex.Store({
           });
 
           // Trigger a timer to check the accounts purchases - can provide update faster waiting for the event
-          const timer = setTimeout(function () {
+          const timer = setInterval(function () {
+            console.log("Dispatching GET_ASSETS_PURCHASED_FOR_ACCOUNT");
             dispatch(actions.GET_ASSETS_PURCHASED_FOR_ACCOUNT);
           }, 1000);
 
