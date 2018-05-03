@@ -186,6 +186,10 @@ const store = new Vuex.Store({
       };
     },
     [mutations.PURCHASE_FAILED](state, {tokenId, buyer}) {
+      // Guard against the timed account check winner and the event coming through as failed
+      if (state.purchaseState[tokenId].state === 'PURCHASE_SUCCESSFUL') {
+        return;
+      }
       state.purchaseState = {
         ...state.purchaseState,
         [tokenId]: {tokenId: tokenId.toString(10), buyer, state: 'PURCHASE_FAILED'}
@@ -203,8 +207,7 @@ const store = new Vuex.Store({
       };
     },
     [mutations.PURCHASE_STARTED](state, {tokenId, buyer, transaction}) {
-
-      // Guard against the timer account purchase check beating the event callbacks
+      // Guard against the timed account check beating the event callbacks
       if (state.purchaseState[tokenId].state === 'PURCHASE_SUCCESSFUL') {
         state.purchaseState = {
           ...state.purchaseState,
@@ -230,7 +233,7 @@ const store = new Vuex.Store({
   },
   actions: {
     [actions.UPDATE_PURCHASE_STATE_FOR_ACCOUNT]({commit, dispatch, state}) {
-      
+
       // Get the tokens which are currently in the process of being purchased
       let currentAssetsBeingPurchased = _.keys(state.purchaseState);
 
