@@ -1,8 +1,15 @@
 <template>
   <div class="container">
-    <h1>Assets <span v-if="assets">({{ assets.length }})</span></h1>
+    <h1>Assets <span class="badge badge-primary" v-if="assets.length > 0">{{ assets.length }}</span></h1>
 
     <loading-spinner v-if="!hasFinishedLoading()"></loading-spinner>
+
+    <div class="row justify-content-sm-center" v-if="!hasFinishedLoading()">
+      <div class="col text-center mt-5">
+        <p>We are loading assets from the Blockchain.</p>
+        <p>Please be patient as we are fully decentralised.</p>
+      </div>
+    </div>
 
     <div class="card-columns" v-if="assets.length > 0">
       <asset v-for="asset in assets"
