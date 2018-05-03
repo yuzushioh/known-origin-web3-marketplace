@@ -148,7 +148,7 @@ const store = new Vuex.Store({
       state.artists = artists;
     },
     [mutations.SET_ASSETS_PURCHASED_FROM_ACCOUNT](state, tokens) {
-      Vue.set(state, 'assetsPurchasedByAccount', tokens);
+      Vue.set(state, 'assetsPurchasedByAccount', tokens.map(val => val.toString(10)));
     },
     [mutations.SET_TOTAL_PURCHASED](state, {totalPurchaseValueInWei, totalNumberOfPurchases, totalPurchaseValueInEther}) {
       state.totalPurchaseValueInWei = totalPurchaseValueInWei;
@@ -182,20 +182,23 @@ const store = new Vuex.Store({
     [mutations.PURCHASE_TRIGGERED](state, {tokenId, buyer}) {
       state.purchaseState = {
         ...state.purchaseState,
-        [tokenId]: {tokenId, buyer, state: 'PURCHASE_TRIGGERED'}
+        [tokenId]: {tokenId: tokenId.toString(10), buyer, state: 'PURCHASE_TRIGGERED'}
       };
     },
     [mutations.PURCHASE_FAILED](state, {tokenId, buyer}) {
       state.purchaseState = {
         ...state.purchaseState,
-        [tokenId]: {tokenId, buyer, state: 'PURCHASE_FAILED'}
+        [tokenId]: {tokenId: tokenId.toString(10), buyer, state: 'PURCHASE_FAILED'}
       };
     },
     [mutations.PURCHASE_SUCCESSFUL](state, {tokenId, buyer}) {
       state.purchaseState = {
         ...state.purchaseState,
         [tokenId]: {
-          tokenId, buyer, transaction: state.purchaseState[tokenId].transaction, state: 'PURCHASE_SUCCESSFUL'
+          tokenId: tokenId.toString(10),
+          buyer,
+          transaction: state.purchaseState[tokenId].transaction,
+          state: 'PURCHASE_SUCCESSFUL'
         }
       };
     },
@@ -206,7 +209,7 @@ const store = new Vuex.Store({
         state.purchaseState = {
           ...state.purchaseState,
           [tokenId]: {
-            tokenId, buyer, transaction: transaction, state: 'PURCHASE_SUCCESSFUL'
+            tokenId: tokenId.toString(10), buyer, transaction: transaction, state: 'PURCHASE_SUCCESSFUL'
           }
         };
         return;
@@ -214,7 +217,7 @@ const store = new Vuex.Store({
 
       state.purchaseState = {
         ...state.purchaseState,
-        [tokenId]: {tokenId, buyer, transaction, state: 'PURCHASE_STARTED'}
+        [tokenId]: {tokenId: tokenId.toString(10), buyer, transaction, state: 'PURCHASE_STARTED'}
       };
     },
     [mutations.UPDATE_PURCHASE_STATE](state, {tokenId}) {
@@ -227,25 +230,28 @@ const store = new Vuex.Store({
   },
   actions: {
     [actions.UPDATE_PURCHASE_STATE_FOR_ACCOUNT]({commit, dispatch, state}) {
+      
       // Get the tokens which are currently in the process of being purchased
-      let assetsBeingPurchased = _.keys(state.purchaseState);
+      let currentAssetsBeingPurchased = _.keys(state.purchaseState);
 
-      // Check is the purchased assets for the account are currently in the purchase flow
-      const matcher = function (purchaseAsset) {
-        return _.some(assetsBeingPurchased, function (asset) {
-          return purchaseAsset.toString(10) === asset.toString();
+      Vue.$log.debug(`Currently owned assets [${state.assetsPurchasedByAccount}] - accounts purchase state [${currentAssetsBeingPurchased}]`);
+
+      // Match all which the assets which are current being purchased against the accounts balance from the blockchain
+      let accountOwnedAssetsBeingPurchased = _.intersection(state.assetsPurchasedByAccount, currentAssetsBeingPurchased);
+
+      if (accountOwnedAssetsBeingPurchased.length > 0) {
+
+        _.forEach(accountOwnedAssetsBeingPurchased, function (asset) {
+          // If the asset is not marked as PURCHASE_SUCCESSFUL force state to move to this
+          if (state.purchaseState[asset].state !== 'PURCHASE_SUCCESSFUL') {
+            Vue.$log.debug(`Purchase state for token [${asset}] is [${state.purchaseState[asset].state}] - updating state to [PURCHASE_SUCCESSFUL]`);
+            commit(mutations.PURCHASE_SUCCESSFUL, {
+              tokenId: asset,
+              buyer: state.account,
+              force: true // mark this as a force transaction for debugging
+            });
+          }
         });
-      };
-
-      console.log(`Currently owned assets [${state.assetsPurchasedByAccount}] - accounts purchase state [${assetsBeingPurchased}]`);
-
-      let assetPurchased = _.find(state.assetsPurchasedByAccount, matcher);
-      if (assetPurchased) {
-        // If the asset is not marked as PURCHASE_SUCCESSFUL force state to move to this
-        if (state.purchaseState[assetPurchased].state !== 'PURCHASE_SUCCESSFUL') {
-          console.log(`Purchase state for token [${assetPurchased.toString(10)}] is [${state.purchaseState[assetPurchased].state}] - updating state to [PURCHASE_SUCCESSFUL]`);
-          commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: assetPurchased, buyer: state.account});
-        }
       }
     },
     [actions.GET_ASSETS_PURCHASED_FOR_ACCOUNT]({commit, dispatch, state}) {
@@ -537,8 +543,6 @@ const store = new Vuex.Store({
         }).catch((error) => console.log("Something went bang!", error));
     },
     [actions.PURCHASE_ASSET]: function ({commit, dispatch, state}, assetToPurchase) {
-      console.log('assetToPurchase', assetToPurchase);
-
       Vue.$log.debug(`Attempting purchase of ${assetToPurchase.type} asset - ID ${assetToPurchase.id}`);
 
       KnownOriginDigitalAsset.deployed()
