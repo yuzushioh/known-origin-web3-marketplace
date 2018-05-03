@@ -195,14 +195,23 @@ const store = new Vuex.Store({
       state.purchaseState = {
         ...state.purchaseState,
         [tokenId]: {
-          tokenId,
-          buyer,
-          transaction: state.purchaseState[tokenId].transaction,
-          state: 'PURCHASE_SUCCESSFUL'
+          tokenId, buyer, transaction: state.purchaseState[tokenId].transaction, state: 'PURCHASE_SUCCESSFUL'
         }
       };
     },
     [mutations.PURCHASE_STARTED](state, {tokenId, buyer, transaction}) {
+
+      // Guard against the timer account purchase check beating the event callbacks
+      if (state.purchaseState[tokenId].state === 'PURCHASE_SUCCESSFUL') {
+        state.purchaseState = {
+          ...state.purchaseState,
+          [tokenId]: {
+            tokenId, buyer, transaction: transaction, state: 'PURCHASE_SUCCESSFUL'
+          }
+        };
+        return;
+      }
+
       state.purchaseState = {
         ...state.purchaseState,
         [tokenId]: {tokenId, buyer, transaction, state: 'PURCHASE_STARTED'}
@@ -220,25 +229,22 @@ const store = new Vuex.Store({
     [actions.UPDATE_PURCHASE_STATE_FOR_ACCOUNT]({commit, dispatch, state}) {
       // Get the tokens which are currently in the process of being purchased
       let assetsBeingPurchased = _.keys(state.purchaseState);
-      console.log("assetsBeingPurchased", assetsBeingPurchased);
 
       // Check is the purchased assets for the account are currently in the purchase flow
       const matcher = function (purchaseAsset) {
         return _.some(assetsBeingPurchased, function (asset) {
-          console.log("matcher() purchaseAsset", purchaseAsset.toString(10), asset.toString());
           return purchaseAsset.toString(10) === asset.toString();
         });
       };
 
-      let found = _.find(state.assetsPurchasedByAccount, matcher);
-      console.log("FOUND", found);
+      console.log(`Currently owned assets [${state.assetsPurchasedByAccount}] - accounts purchase state [${assetsBeingPurchased}]`);
 
-      if (found) {
-        console.log("FOUND", found);
-        // If the asset is not purchased successful then update the state to show its success
-        if (state.purchaseState[found] && state.purchaseState[found].state !== 'PURCHASE_SUCCESSFUL') {
-          console.log("matched: setting success for asset", found);
-          commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: found, buyer: state.accounts});
+      let assetPurchased = _.find(state.assetsPurchasedByAccount, matcher);
+      if (assetPurchased) {
+        // If the asset is not marked as PURCHASE_SUCCESSFUL force state to move to this
+        if (state.purchaseState[assetPurchased].state !== 'PURCHASE_SUCCESSFUL') {
+          console.log(`Purchase state for token [${assetPurchased.toString(10)}] is [${state.purchaseState[assetPurchased].state}] - updating state to [PURCHASE_SUCCESSFUL]`);
+          commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: assetPurchased, buyer: state.account});
         }
       }
     },
