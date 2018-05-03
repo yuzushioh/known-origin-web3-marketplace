@@ -253,6 +253,8 @@ const store = new Vuex.Store({
               buyer: state.account,
               force: true // mark this as a force transaction for debugging
             });
+
+            dispatch(actions.REFRESH_CONTRACT_DETAILS); // update state of asserts etc
           }
         });
       }
@@ -568,6 +570,7 @@ const store = new Vuex.Store({
           purchaseEvent.watch(function (error, result) {
             if (!error) {
               // 3) Purchase succeeded
+              console.log('Purchase successful', result);
               dispatch(actions.REFRESH_CONTRACT_DETAILS);
               dispatch(actions.GET_ASSETS_PURCHASED_FOR_ACCOUNT);
               commit(mutations.PURCHASE_SUCCESSFUL, {tokenId: _tokenId, buyer: _buyer});
