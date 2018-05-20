@@ -48,10 +48,11 @@
       </router-link>
     </div>
 
-    <!-- disabled for now until we know more -->
-    <!--<hr/>-->
-    <!--<div>-->
-    <!--<verify-purchase :asset-id="asset.id"></verify-purchase>-->
+    <!-- TODO /  FIXME - skin this up -->
+    <hr/>
+    <div>
+      <verify-purchase :asset-id="asset.id"></verify-purchase>
+    </div>
 
   </div>
 </template>

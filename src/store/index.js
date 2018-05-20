@@ -11,6 +11,8 @@ import {getNetIdString, getEtherscanAddress} from '../utils';
 import contract from 'truffle-contract';
 import knownOriginDigitalAssetJson from '../../build/contracts/KnownOriginDigitalAsset.json';
 
+const Eth = require('ethjs');
+
 const KnownOriginDigitalAsset = contract(knownOriginDigitalAssetJson);
 
 Vue.use(Vuex);
@@ -67,7 +69,8 @@ const store = new Vuex.Store({
     findNextAssetToPurchase: (state, getters) => (edition) => {
       let editions = getters.assetsForEdition(edition.edition);
       return _.chain(editions)
-        .orderBy('editionNumber')
+      // find cheapest next edition (some editions can have different prices)
+        .orderBy(['priceInEtherSortable', 'editionNumber'])
         .filter({purchased: 0})
         .head()
         .value();
@@ -735,15 +738,63 @@ const store = new Vuex.Store({
         });
     },
     [actions.VERIFY_PURCHASE]({commit, dispatch, state}, assetId) {
-      state.web3.eth.personal.sign(
-        Web3.utils.utf8ToHex(`I verify that I have purchased this asset from KnownOrigin - KODA assetId=${assetId}`),
-        state.account
-      ).then(function (result) {
-        console.log(result);
-        // TODO - store in firebase under the specific account?
-        // OR
-        // TODO - post to API to verify/record action taken?
-      });
+
+      const requestHighResDownload = ({originalMessage, originalMessageHex, signedMessage}) => {
+        console.log(originalMessage, signedMessage);
+        return state.web3.eth.net.getId()
+          .then((networkId) => {
+
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'X-Requested-By': `${window.href}`
+              },
+              data: {
+                address: state.account,
+                originalMessage,
+                originalMessageHex,
+                signedMessage,
+                networkId
+              },
+              url: 'http://localhost:5000/known-origin-io/us-central1/verifyMessage',
+            };
+
+            return axios(options);
+          });
+      };
+
+      const validateResponse = (response) => {
+        console.log(response);
+      };
+
+      let originalMessage = `I verify that I [${state.account}] have purchased this asset from KnownOrigin - KODA assetId=[${assetId}]. I have read and will complie to the Terms & Conditions for downloading the high resolution version of this asset`;
+      let hexMessageToSign = Web3.utils.utf8ToHex(originalMessage);
+
+      // const eth = new Eth(state.web3.currentProvider);
+      // eth.personal_sign(originalMessage, state.account)
+      //   .then((signed) => {
+      //     console.log('Signed!  Result is: ', signed);
+      //     console.log('Recovering...');
+      //
+      //     // return eth.personal_ecRecover(msg, signed)
+      //
+      //     return requestHighResDownload({
+      //       originalMessage: originalMessage,
+      //       signedMessage: signed
+      //     });
+      //   })
+      //   .then((response) => validateResponse(response));
+
+      state.web3.eth.personal
+        .sign(originalMessage, state.account)
+        .then((result) => requestHighResDownload({
+          originalMessage: originalMessage,
+          originalMessageHex: hexMessageToSign,
+          signedMessage: result
+        }))
+        .then((response) => validateResponse(response));
     }
   }
 });
