@@ -737,10 +737,9 @@ const store = new Vuex.Store({
           commit(mutations.PURCHASE_FAILED, {tokenId: assetToPurchase.id, buyer: state.account});
         });
     },
-    [actions.VERIFY_PURCHASE]({commit, dispatch, state}, assetId) {
+    [actions.HIGH_RES_DOWNLOAD]({commit, dispatch, state}, assetId) {
 
-      const requestHighResDownload = ({originalMessage, originalMessageHex, signedMessage}) => {
-        console.log(originalMessage, signedMessage);
+      const requestHighResDownload = ({originalMessage, signedMessage}) => {
         return state.web3.eth.net.getId()
           .then((networkId) => {
 
@@ -754,7 +753,6 @@ const store = new Vuex.Store({
               data: {
                 address: state.account,
                 originalMessage,
-                originalMessageHex,
                 signedMessage,
                 networkId
               },
@@ -767,31 +765,15 @@ const store = new Vuex.Store({
 
       const validateResponse = (response) => {
         console.log(response);
+        // TODO handle success/failure
       };
 
-      let originalMessage = `I verify that I [${state.account}] have purchased this asset from KnownOrigin - KODA assetId=[${assetId}]. I have read and will complie to the Terms & Conditions for downloading the high resolution version of this asset`;
-      let hexMessageToSign = Web3.utils.utf8ToHex(originalMessage);
-
-      // const eth = new Eth(state.web3.currentProvider);
-      // eth.personal_sign(originalMessage, state.account)
-      //   .then((signed) => {
-      //     console.log('Signed!  Result is: ', signed);
-      //     console.log('Recovering...');
-      //
-      //     // return eth.personal_ecRecover(msg, signed)
-      //
-      //     return requestHighResDownload({
-      //       originalMessage: originalMessage,
-      //       signedMessage: signed
-      //     });
-      //   })
-      //   .then((response) => validateResponse(response));
+      let message = `I verify that I [${state.account}] have purchased this asset from KnownOrigin - KODA assetId=[${assetId}]. I have read and will complie to the Terms & Conditions for downloading the high resolution version of this asset`;
 
       state.web3.eth.personal
-        .sign(originalMessage, state.account)
+        .sign(message, state.account)
         .then((result) => requestHighResDownload({
-          originalMessage: originalMessage,
-          originalMessageHex: hexMessageToSign,
+          originalMessage: message,
           signedMessage: result
         }))
         .then((response) => validateResponse(response));

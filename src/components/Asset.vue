@@ -48,10 +48,9 @@
       </router-link>
     </div>
 
-    <!-- TODO /  FIXME - skin this up -->
-    <hr/>
     <div>
-      <verify-purchase :asset-id="asset.id"></verify-purchase>
+    <!-- TODO /  FIXME - skin this up -->
+      <high-res-download :asset-id="asset.id"></high-res-download>
     </div>
 
   </div>
@@ -66,7 +65,7 @@
   import TokenId from './ui-controls/TokenId';
   import EditionNameByArtist from './ui-controls/EditionNameByArtist';
   import TweetPurchaseButton from "./ui-controls/TweetPurchasedAssetButton";
-  import VerifyPurchase from "./ui-controls/VerifyPurchase";
+  import HighResDownload from "./ui-controls/HighResDownload";
   import ClickableAddress from './ui-controls/ClickableAddress';
   import TweetAssetButton from "./ui-controls/TweetAssetButton";
   import RarityIndicator from "./ui-controls/RarityIndicator";
@@ -76,7 +75,7 @@
     components: {
       MetadataAttributes,
       RarityIndicator,
-      VerifyPurchase,
+      HighResDownload,
       TweetPurchaseButton,
       AddressIcon,
       PurchaseState,
