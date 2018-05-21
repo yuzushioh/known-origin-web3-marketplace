@@ -11,8 +11,6 @@ import {getNetIdString, getEtherscanAddress} from '../utils';
 import contract from 'truffle-contract';
 import knownOriginDigitalAssetJson from '../../build/contracts/KnownOriginDigitalAsset.json';
 
-const Eth = require('ethjs');
-
 const KnownOriginDigitalAsset = contract(knownOriginDigitalAssetJson);
 
 Vue.use(Vuex);
@@ -737,7 +735,7 @@ const store = new Vuex.Store({
           commit(mutations.PURCHASE_FAILED, {tokenId: assetToPurchase.id, buyer: state.account});
         });
     },
-    [actions.HIGH_RES_DOWNLOAD]({commit, dispatch, state}, assetId) {
+    [actions.HIGH_RES_DOWNLOAD]({commit, dispatch, state}, asset) {
 
       const requestHighResDownload = ({originalMessage, signedMessage}) => {
         return state.web3.eth.net.getId()
@@ -752,10 +750,12 @@ const store = new Vuex.Store({
               },
               data: {
                 address: state.account,
+                assetId: asset.id,
                 originalMessage,
                 signedMessage,
                 networkId
               },
+              // TODO switch this out for live firebase function once hosted
               url: 'http://localhost:5000/known-origin-io/us-central1/verifyMessage',
             };
 
@@ -768,7 +768,7 @@ const store = new Vuex.Store({
         // TODO handle success/failure
       };
 
-      let message = `I verify that I [${state.account}] have purchased this asset from KnownOrigin - KODA assetId=[${assetId}]. I have read and will complie to the Terms & Conditions for downloading the high resolution version of this asset`;
+      let message = `I verify that I [${state.account}] have purchased this asset from KnownOrigin - KODA assetId=[${asset.id}]. I have read and will complie to the Terms & Conditions for downloading the high resolution version of this asset`;
 
       state.web3.eth.personal
         .sign(message, state.account)

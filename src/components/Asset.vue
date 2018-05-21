@@ -50,7 +50,7 @@
 
     <div>
     <!-- TODO /  FIXME - skin this up -->
-      <high-res-download :asset-id="asset.id"></high-res-download>
+      <high-res-download :asset="asset"></high-res-download>
     </div>
 
   </div>
