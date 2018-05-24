@@ -51,11 +51,6 @@
       </router-link>
     </div>
 
-    <div>
-    <!-- TODO /  FIXME - skin this up -->
-      <high-res-download :asset="asset"></high-res-download>
-    </div>
-
   </div>
 </template>
 

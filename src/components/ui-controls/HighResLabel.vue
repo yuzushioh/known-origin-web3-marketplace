@@ -3,20 +3,27 @@
     <span class="badge badge-secondary">
       high res
     </span>
-    <!--<font-awesome-icon :icon="['fas', 'cloud-download-alt']"></font-awesome-icon>-->
-    <!--<font-awesome-icon :icon="['fas', 'info']"></font-awesome-icon>-->
+    <high-res-download :asset="asset" :v-if="asset.owner === account"></high-res-download>
   </span>
 </template>
 
 <script>
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+  import HighResDownload from "./HighResDownload.vue";
+  import {mapGetters, mapState} from 'vuex';
 
   export default {
-    components: {FontAwesomeIcon},
+    components: {
+      HighResDownload,
+      FontAwesomeIcon
+    },
     name: 'highResLabel',
     props: ['asset'],
-    computed: {},
-    methods: {}
+    computed: {
+      ...mapState([
+        'account',
+      ]),
+    },
   };
 </script>
 

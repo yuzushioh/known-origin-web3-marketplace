@@ -51,7 +51,8 @@ const store = new Vuex.Store({
     editionSummary: [],
 
     // Frontend state
-    purchaseState: {}
+    purchaseState: {},
+    highResDownload: {},
   },
   getters: {
     assetsForEdition: (state) => (edition) => {
@@ -150,6 +151,9 @@ const store = new Vuex.Store({
     cheapestPiece: (state, getters) => () => {
       return _.head(_.orderBy(state.assets, 'priceInEtherSortable', 'asc'));
     },
+    getDownloadLinkForTokenId: (state) => (tokenId) => {
+      return state.highResDownload[tokenId];
+    }
   },
   mutations: {
     [mutations.SET_COMMISSION_ADDRESSES](state, {curatorAddress, contractDeveloperAddress, contractAddress}) {
@@ -248,6 +252,9 @@ const store = new Vuex.Store({
     [mutations.UPDATE_PURCHASE_STATE](state, {tokenId}) {
       delete state.purchaseState[tokenId];
       state.purchaseState = {...state.purchaseState};
+    },
+    [mutations.HIGH_RES_DOWNLOAD](state, {tokenId, url}) {
+      state.highResDownload = {...state.highResDownload, [tokenId]: url};
     },
     [mutations.SET_WEB3](state, web3) {
       state.web3 = web3;
@@ -763,13 +770,13 @@ const store = new Vuex.Store({
               },
               data: {
                 address: state.account,
-                assetId: asset.id,
+                tokenId: asset.id,
                 originalMessage,
                 signedMessage,
                 networkId
               },
               // TODO switch this out for live firebase function once hosted
-              url: 'http://localhost:5000/known-origin-io/us-central1/verifyMessage',
+              url: 'http://localhost:5000/known-origin-io/us-central1/highResDownload',
             };
 
             return axios(options);
@@ -778,10 +785,17 @@ const store = new Vuex.Store({
 
       const validateResponse = (response) => {
         console.log(response);
-        // TODO handle success/failure
+        if (response.status === 202 && response.data.url) {
+          // TODO can we open a download link to this?
+          // window.open(response.data.url, '_blank');
+          commit(mutations.HIGH_RES_DOWNLOAD, {url: response.data.url, tokenId: asset.id});
+        } else {
+          // TODO handle failure
+        }
       };
 
-      let message = `I verify that I [${state.account}] have purchased this asset from KnownOrigin - KODA assetId=[${asset.id}]. I have read and will complie to the Terms & Conditions for downloading the high resolution version of this asset`;
+      let message =
+        `I verify that I [${state.account}] have purchased this asset from KnownOrigin\n\nKnownOrigin edition=[${asset.edition}] assetId=[${asset.id}]\n\nBy signing this transaction you adhear to the license agreement found here https://knownorigin.io/license and to not infringe copyright associated to this asset`;
 
       state.web3.eth.personal
         .sign(message, state.account)

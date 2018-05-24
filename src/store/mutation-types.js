@@ -7,6 +7,7 @@ export const SET_WEB3 = 'SET_WEB3';
 
 // External API calls
 export const SET_USD_PRICE = 'SET_USD_PRICE';
+export const HIGH_RES_DOWNLOAD = 'HIGH_RES_DOWNLOAD';
 
 ///////////////////
 // Contract Data //
